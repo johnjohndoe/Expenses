@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Expenses</string>
+    <string name="versionName">0.0.1</string>
+
+    <!-- Navigation Drawer Strings -->
+    <!-- Format: navigation_<something> -->
+    <string name="navigation_title_overview">Overview</string>
+    <string name="navigation_title_history">History</string>
+    <string name="navigation_title_budget">Title Budget</string>
+    <string name="navigation_title_distribution">Distribution</string>
+    <string name="navigation_title_statistics">Statistics</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Action Bar Strings -->
+    <!-- Format: action_<something> -->
+    <string name="action_feedback">Feedback</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_add_income">Add Income</string>
+    <string name="action_add_expense">Add Expense</string>
+
+</resources>

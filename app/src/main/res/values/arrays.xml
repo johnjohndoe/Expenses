@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_credits_list_entries">
+        <item>Android-Action-Bar-Icons</item>
+        <item>Credit2</item>
+        <item>Credit3</item>
+        <item>Credit4</item>
+    </string-array>
+
+    <string-array name="pref_credits_list_values">
+        <item>EntryVALUE</item>
+        <item>Entry2</item>
+        <item>Entry3</item>
+        <item>Entry3</item>
+    </string-array>
+
+</resources>

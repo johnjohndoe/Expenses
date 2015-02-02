@@ -1,0 +1,27 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="@string/pref_category_key_about"
+        android:title="@string/pref_category_title_about">
+
+        <EditTextPreference
+            android:key="@string/pref_key_developer_name"
+            android:selectable="false"
+            android:summary="@string/pref_summary_developer_name"
+            android:title="@string/pref_title_developer_name" />
+
+        <Preference
+            android:dialogLayout="@layout/credit_dialog"
+            android:key="@string/pref_key_credits"
+            android:summary="@string/pref_summary_credits"
+            android:title="@string/pref_title_credits" />
+
+        <EditTextPreference
+            android:key="@string/pref_key_version"
+            android:selectable="false"
+            android:summary="@string/versionName"
+            android:title="@string/pref_title_version" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
