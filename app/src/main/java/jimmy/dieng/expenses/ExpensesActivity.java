@@ -152,7 +152,7 @@ public class ExpensesActivity extends ActionBarActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_expenses, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_default, container, false);
             //TODO: Remove later
             TextView mainText = (TextView) rootView.findViewById(R.id.section_label);
             mainText.setText(String.valueOf(getArguments().getInt(ARG_SECTION_NUMBER)));
