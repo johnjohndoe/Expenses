@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.util.ChartUtils;
@@ -32,12 +33,12 @@ public class ExpenseFragment extends Fragment {
 
     // TODO: SAMPLE
     private boolean hasLabels = false;
-    private boolean hasLabelsOutside = false;
+    private boolean hasLabelsOutside = true;
     private boolean hasCenterCircle = true;
     private boolean hasCenterText1 = false;
     private boolean hasCenterText2 = false;
     private boolean isExploaded = false;
-    private boolean hasArcSeparated = false;
+    private boolean hasArcSeparated = true;
     private boolean hasLabelForSelected = true;
     // TODO: END SAMPLE
 
@@ -150,7 +151,50 @@ public class ExpenseFragment extends Fragment {
         }
 
         expensesPieChart.setPieChartData(data);
+        expensesPieChart.setChartRotationEnabled(false);
+        expensesPieChart.setOnValueTouchListener(new PieChartOnValueSelectListener() {
+            int lastOpenSlice = -1;
+
+            @Override
+            public void onValueSelected(int arcIndex, SliceValue value) {
+                toggleSliceSpacing(arcIndex);
+
+                // Keep track of this arc as its the only one open
+                if (lastOpenSlice == -1) {
+                    lastOpenSlice = arcIndex;
+                }
+                // Else there is another arc to close
+                else {
+                    // If it is the same arc selected then we have already closed it
+                    if (lastOpenSlice == arcIndex) {
+                        lastOpenSlice = -1;
+                    }
+
+                    // Else we have to close it
+                    else {
+                        toggleSliceSpacing(lastOpenSlice);
+                        lastOpenSlice = arcIndex;
+                    }
+                }
+            }
+
+            @Override
+            public void onValueDeselected() {
+            }
+        });
     }
     // TODO: END SAMPLE
 
+    private void toggleSliceSpacing(int arcIndex) {
+        SliceValue slice = data.getValues().get(arcIndex);
+        toggleSliceSpacing(slice);
+    }
+
+    private void toggleSliceSpacing(SliceValue slice) {
+        if (slice.getSliceSpacing() == 24) {
+            slice.setSliceSpacing(0);
+        } else {
+            slice.setSliceSpacing(24);
+        }
+    }
 }
