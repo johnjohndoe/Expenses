@@ -8,12 +8,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
-import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.PieChartView;
@@ -28,16 +28,18 @@ import lecho.lib.hellocharts.view.PieChartView;
 public class ExpenseFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private PieChartView expensesPieChart;
-    private PieChartData data;
-    List<SliceValue> pieValues;
+    private ExpenseChartData data;
+    private ArrayList<SliceValue> pieValues;
+    private ListView expenseList;
+    private ExpenseAdapter expenseAdapter;
+
 
     // TODO: SAMPLE
     private boolean hasLabels = false;
-    private boolean hasLabelsOutside = true;
+    private boolean hasLabelsOutside = false;
     private boolean hasCenterCircle = true;
-    private boolean hasCenterText1 = false;
-    private boolean hasCenterText2 = false;
-    private boolean isExploaded = false;
+    private boolean hasCenterText1 = true;
+    private boolean hasCenterText2 = true;
     private boolean hasArcSeparated = true;
     private boolean hasLabelForSelected = true;
     // TODO: END SAMPLE
@@ -65,8 +67,12 @@ public class ExpenseFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_expense, container, false);
         expensesPieChart = (PieChartView) rootView.findViewById(R.id.pie_expense);
-        pieValues = new ArrayList<SliceValue>();
         generateData();
+
+        expenseAdapter = new ExpenseAdapter(this.getActivity(), R.layout.expense_list_item, pieValues);
+        expenseList = (ListView) rootView.findViewById(R.id.expense_list);
+        expenseList.setAdapter(expenseAdapter);
+
         return rootView;
     }
 
@@ -107,22 +113,15 @@ public class ExpenseFragment extends Fragment {
     private void generateData() {
         int numValues = 6;
 
-        List<SliceValue> values = new ArrayList<SliceValue>();
+        // Set up values of each arc and their spacing
+        pieValues = new ArrayList<SliceValue>();
         for (int i = 0; i < numValues; ++i) {
             SliceValue sliceValue = new SliceValue((float) Math.random() * 30 + 15, ChartUtils.pickColor());
-
-            if (isExploaded) {
-                sliceValue.setSliceSpacing(24);
-            }
-
-            if (hasArcSeparated && i == 0) {
-                sliceValue.setSliceSpacing(32);
-            }
-
-            values.add(sliceValue);
+            sliceValue.setLabel(getCharForNumber(i + 1).toCharArray());
+            pieValues.add(sliceValue);
         }
 
-        data = new PieChartData(values);
+        data = new ExpenseChartData(pieValues);
         data.setHasLabels(hasLabels);
         data.setHasLabelsOnlyForSelected(hasLabelForSelected);
         data.setHasLabelsOutside(hasLabelsOutside);
@@ -132,7 +131,7 @@ public class ExpenseFragment extends Fragment {
             data.setCenterText1("Hello!");
 
             // Get roboto-italic font.
-            Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
+            Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Light.ttf");
             data.setCenterText1Typeface(tf);
 
             // Get font size from dimens.xml and convert it to sp(library uses sp values).
@@ -143,7 +142,7 @@ public class ExpenseFragment extends Fragment {
         if (hasCenterText2) {
             data.setCenterText2("Charts (Roboto Italic)");
 
-            Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
+            Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Light.ttf");
 
             data.setCenterText2Typeface(tf);
             data.setCenterText2FontSize(ChartUtils.px2sp(getResources().getDisplayMetrics().scaledDensity,
@@ -158,6 +157,9 @@ public class ExpenseFragment extends Fragment {
             @Override
             public void onValueSelected(int arcIndex, SliceValue value) {
                 toggleSliceSpacing(arcIndex);
+                DecimalFormat decimalFormat = new DecimalFormat("@@@@%");
+                data.setCenterText1(String.valueOf(value.getLabel()));
+                data.setCenterText2(decimalFormat.format(data.getPercentageOfValue(arcIndex)));
 
                 // Keep track of this arc as its the only one open
                 if (lastOpenSlice == -1) {
@@ -182,6 +184,10 @@ public class ExpenseFragment extends Fragment {
             public void onValueDeselected() {
             }
         });
+    }
+
+    private String getCharForNumber(int i) {
+        return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;
     }
     // TODO: END SAMPLE
 

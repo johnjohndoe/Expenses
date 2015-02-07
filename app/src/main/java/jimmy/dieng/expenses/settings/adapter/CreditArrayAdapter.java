@@ -16,8 +16,8 @@ import jimmy.dieng.expenses.settings.Credit;
  * Created by jimmydieng on 15-01-31.
  */
 public class CreditArrayAdapter extends ArrayAdapter<Credit> {
-    ArrayList<Credit> mAllCredits;
-    Context mContext;
+    private ArrayList<Credit> mAllCredits;
+    private Context mContext;
 
     static class CreditHolder {
         public TextView mCreditTitle;
