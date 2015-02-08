@@ -27,6 +27,7 @@ import lecho.lib.hellocharts.view.PieChartView;
  * interface.
  */
 public class ExpenseFragment extends Fragment {
+    private View rootView;
     private OnFragmentInteractionListener mListener;
     private PieChartView expensesPieChart;
     private ExpenseChartData data;
@@ -44,7 +45,6 @@ public class ExpenseFragment extends Fragment {
     private boolean hasCenterCircle = true;
     private boolean hasCenterText1 = true;
     private boolean hasCenterText2 = true;
-    private boolean hasArcSeparated = true;
     private boolean hasLabelForSelected = true;
     // TODO: END SAMPLE
 
@@ -65,10 +65,28 @@ public class ExpenseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_expense, container, false);
+        rootView = inflater.inflate(R.layout.fragment_expense, container, false);
+        setUpUI();
+
+        return rootView;
+    }
+
+    private void setUpUI() {
+        // Set up the pie chart view
         expensesPieChart = (PieChartView) rootView.findViewById(R.id.pie_expense);
+        pieChartListener = new PieChartOnValueSelectListener() {
+            @Override
+            public void onValueSelected(int arcIndex, SliceValue value) {
+                performBindedClick(arcIndex);
+            }
+
+            @Override
+            public void onValueDeselected() {
+            }
+        };
         generateData();
 
+        // Set up the list view
         expenseAdapter = new ExpenseAdapter(this.getActivity(), R.layout.expense_list_item, pieValues);
         expenseList = (ListView) rootView.findViewById(R.id.expense_list);
         expenseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -79,8 +97,6 @@ public class ExpenseFragment extends Fragment {
             }
         });
         expenseList.setAdapter(expenseAdapter);
-
-        return rootView;
     }
 
     @Override
@@ -151,16 +167,6 @@ public class ExpenseFragment extends Fragment {
 
         expensesPieChart.setPieChartData(data);
         expensesPieChart.setChartRotationEnabled(false);
-        pieChartListener = new PieChartOnValueSelectListener() {
-            @Override
-            public void onValueSelected(int arcIndex, SliceValue value) {
-                performBindedClick(arcIndex);
-            }
-
-            @Override
-            public void onValueDeselected() {
-            }
-        };
         expensesPieChart.setOnValueTouchListener(pieChartListener);
     }
 
