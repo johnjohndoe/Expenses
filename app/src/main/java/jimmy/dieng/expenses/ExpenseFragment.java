@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.text.DecimalFormat;
@@ -32,6 +33,7 @@ public class ExpenseFragment extends Fragment {
     private ArrayList<SliceValue> pieValues;
     private ListView expenseList;
     private ExpenseAdapter expenseAdapter;
+    private View currentSelectedView;
 
 
     // TODO: SAMPLE
@@ -71,6 +73,16 @@ public class ExpenseFragment extends Fragment {
 
         expenseAdapter = new ExpenseAdapter(this.getActivity(), R.layout.expense_list_item, pieValues);
         expenseList = (ListView) rootView.findViewById(R.id.expense_list);
+        expenseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (currentSelectedView != null && currentSelectedView != view){
+                    unhighlightCurrentRow(currentSelectedView);
+                }
+                currentSelectedView = view;
+                highlightCurrentRow(currentSelectedView);
+            }
+        });
         expenseList.setAdapter(expenseAdapter);
 
         return rootView;
@@ -202,5 +214,13 @@ public class ExpenseFragment extends Fragment {
         } else {
             slice.setSliceSpacing(24);
         }
+    }
+
+    private void unhighlightCurrentRow(View rowView){
+        rowView.setBackgroundColor(getResources().getColor(R.color.white_cloud));
+    }
+
+    private void highlightCurrentRow(View rowView){
+        rowView.setBackgroundColor(getResources().getColor(R.color.gray_silver));
     }
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="white_cloud" type="color">#ecf0f1</item>
+    <item name="gray_silver" type="color">#bdc3c7</item>
+</resources>
