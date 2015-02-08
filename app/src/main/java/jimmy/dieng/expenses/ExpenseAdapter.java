@@ -57,4 +57,6 @@ public class ExpenseAdapter extends ArrayAdapter {
 
         return expenseView;
     }
+
+
 }
