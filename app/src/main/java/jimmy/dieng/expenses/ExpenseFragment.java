@@ -34,6 +34,8 @@ public class ExpenseFragment extends Fragment {
     private ListView expenseList;
     private ExpenseAdapter expenseAdapter;
     private View currentSelectedView;
+    private PieChartOnValueSelectListener pieChartListener;
+    private int lastOpenSlice = -1;
 
 
     // TODO: SAMPLE
@@ -46,13 +48,9 @@ public class ExpenseFragment extends Fragment {
     private boolean hasLabelForSelected = true;
     // TODO: END SAMPLE
 
-    // TODO: Decide if arguments are needed
-    public static ExpenseFragment newInstance(String param1, String param2) {
-        ExpenseFragment fragment = new ExpenseFragment();
 
-        // TODO: Decide if arguments are needed
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
+    public static ExpenseFragment newInstance() {
+        ExpenseFragment fragment = new ExpenseFragment();
         return fragment;
     }
 
@@ -76,11 +74,8 @@ public class ExpenseFragment extends Fragment {
         expenseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (currentSelectedView != null && currentSelectedView != view){
-                    unhighlightCurrentRow(currentSelectedView);
-                }
-                currentSelectedView = view;
-                highlightCurrentRow(currentSelectedView);
+                pieChartListener.onValueSelected(position, pieValues.get(position));
+                expensesPieChart.animationDataFinished();
             }
         });
         expenseList.setAdapter(expenseAdapter);
@@ -91,13 +86,6 @@ public class ExpenseFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        // TODO: Uncomment when using callbacks
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
@@ -163,43 +151,21 @@ public class ExpenseFragment extends Fragment {
 
         expensesPieChart.setPieChartData(data);
         expensesPieChart.setChartRotationEnabled(false);
-        expensesPieChart.setOnValueTouchListener(new PieChartOnValueSelectListener() {
-            int lastOpenSlice = -1;
-
+        pieChartListener = new PieChartOnValueSelectListener() {
             @Override
             public void onValueSelected(int arcIndex, SliceValue value) {
-                toggleSliceSpacing(arcIndex);
-                DecimalFormat decimalFormat = new DecimalFormat("@@@@%");
-                data.setCenterText1(String.valueOf(value.getLabel()));
-                data.setCenterText2(decimalFormat.format(data.getPercentageOfValue(arcIndex)));
-
-                // Keep track of this arc as its the only one open
-                if (lastOpenSlice == -1) {
-                    lastOpenSlice = arcIndex;
-                }
-                // Else there is another arc to close
-                else {
-                    // If it is the same arc selected then we have already closed it
-                    if (lastOpenSlice == arcIndex) {
-                        lastOpenSlice = -1;
-                    }
-
-                    // Else we have to close it
-                    else {
-                        toggleSliceSpacing(lastOpenSlice);
-                        lastOpenSlice = arcIndex;
-                    }
-                }
+                performBindedClick(arcIndex);
             }
 
             @Override
             public void onValueDeselected() {
             }
-        });
+        };
+        expensesPieChart.setOnValueTouchListener(pieChartListener);
     }
 
     private String getCharForNumber(int i) {
-        return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;
+        return i > 0 && i < 27 ? String.valueOf((char) (i + 64)) : null;
     }
     // TODO: END SAMPLE
 
@@ -216,11 +182,43 @@ public class ExpenseFragment extends Fragment {
         }
     }
 
-    private void unhighlightCurrentRow(View rowView){
+    private void unhighlightCurrentRow(View rowView) {
         rowView.setBackgroundColor(getResources().getColor(R.color.white_cloud));
     }
 
-    private void highlightCurrentRow(View rowView){
+    private void highlightCurrentRow(View rowView) {
         rowView.setBackgroundColor(getResources().getColor(R.color.gray_silver));
     }
+
+    private void performBindedClick(int arcIndex) {
+        toggleSliceSpacing(arcIndex);
+        DecimalFormat decimalFormat = new DecimalFormat("@@@@%");
+        data.setCenterText1(String.valueOf(pieValues.get(arcIndex).getLabel()));
+        data.setCenterText2(decimalFormat.format(data.getPercentageOfValue(arcIndex)));
+
+        // Keep track of this arc as its the only one open
+        if (lastOpenSlice == -1) {
+            lastOpenSlice = arcIndex;
+        }
+        // Else there is another arc to close
+        else {
+            // If it is the same arc selected then we have already closed it
+            if (lastOpenSlice == arcIndex) {
+                lastOpenSlice = -1;
+            }
+
+            // Else we have to close it
+            else {
+                toggleSliceSpacing(lastOpenSlice);
+                lastOpenSlice = arcIndex;
+            }
+        }
+
+        if (currentSelectedView != null && currentSelectedView != expenseList.getChildAt(arcIndex)) {
+            unhighlightCurrentRow(currentSelectedView);
+        }
+        currentSelectedView = expenseList.getChildAt(arcIndex);
+        highlightCurrentRow(currentSelectedView);
+    }
+
 }
