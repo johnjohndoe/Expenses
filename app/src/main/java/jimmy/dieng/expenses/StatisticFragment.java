@@ -104,10 +104,24 @@ public class StatisticFragment extends Fragment {
     private void getLineData(LineChartView chartView){
         List<Line> lines = new ArrayList<Line>();
         List<PointValue> values = new ArrayList<PointValue>();
+
         for (int i = 0; i < numberOfPoints; i++){
             values.add(new PointValue(i, monthlyDataPoints[i]));
         }
 
+        Line line = new Line(values);
+        line.setColor(ChartUtils.COLOR_GREEN);
+        line.setShape(shape);
+        line.setHasLabels(hasLabels);
+        line.setHasLines(hasLines);
+        line.setHasPoints(hasPoints);
+        lines.add(line);
+
+        addBudgetLine(lines, 100);
+
+        monthlyData = new LineChartData(lines);
+
+        // Set up the X Axis Labels
         List<Float> axisValues = new ArrayList<Float>();
         for (int i = 0; i < numberOfPoints; i++){
             axisValues.add(Float.valueOf(i));
@@ -120,18 +134,8 @@ public class StatisticFragment extends Fragment {
             calendar.set(Calendar.MONTH, i);
             axisValueLabels.add(sdf.format(calendar.getTime()));
         }
-
-        Line line = new Line(values);
-        line.setColor(ChartUtils.COLOR_GREEN);
-        line.setShape(shape);
-        line.setHasLabels(hasLabels);
-        line.setHasLines(hasLines);
-        line.setHasPoints(hasPoints);
-        lines.add(line);
-
-        monthlyData = new LineChartData(lines);
-
         Axis axisX = Axis.generateAxisFromCollection(axisValues, axisValueLabels);
+
         Axis axisY = new Axis().setHasLines(true);
         monthlyData.setAxisXBottom(axisX);
         monthlyData.setAxisYLeft(axisY);
@@ -139,6 +143,17 @@ public class StatisticFragment extends Fragment {
         monthlyData.setBaseValue(Float.NEGATIVE_INFINITY);
         chartView.setLineChartData(monthlyData);
         chartView.setZoomEnabled(false);
+    }
+
+    private void addBudgetLine(List<Line> lines, float budget) {
+        List<PointValue> budgetValue = new ArrayList<PointValue>();
+        budgetValue.add(new PointValue(0, budget));
+        budgetValue.add(new PointValue(numberOfPoints - 1, budget));
+
+        Line budgetLine = new Line(budgetValue);
+        budgetLine.setHasPoints(false);
+        budgetLine.setColor(ChartUtils.COLOR_RED);
+        lines.add(budgetLine);
     }
 
 }
