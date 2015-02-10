@@ -75,8 +75,8 @@ public class StatisticFragment extends Fragment {
         statsMonthlyChart = (LineChartView) rootView.findViewById(R.id.statistic_month_chart);
         statsDailyChart = (LineChartView) rootView.findViewById(R.id.statistic_daily_chart);
         getDataPoints();
-        getLineData(statsMonthlyChart);
-        getLineData(statsDailyChart);
+        getMonthlyLineData(statsMonthlyChart);
+        getDailyLineData(statsDailyChart);
         statsMonthlyChart.setZoomType(ZoomType.HORIZONTAL);
         statsMonthlyChart.setZoomLevel(0, monthlyDataPoints[0], 3);
     }
@@ -101,22 +101,8 @@ public class StatisticFragment extends Fragment {
         }
     }
 
-    private void getLineData(LineChartView chartView){
-        List<Line> lines = new ArrayList<Line>();
-        List<PointValue> values = new ArrayList<PointValue>();
-
-        for (int i = 0; i < numberOfPoints; i++){
-            values.add(new PointValue(i, monthlyDataPoints[i]));
-        }
-
-        Line line = new Line(values);
-        line.setColor(ChartUtils.COLOR_GREEN);
-        line.setShape(shape);
-        line.setHasLabels(hasLabels);
-        line.setHasLines(hasLines);
-        line.setHasPoints(hasPoints);
-        lines.add(line);
-
+    private void getMonthlyLineData(LineChartView chartView){
+        List<Line> lines = generateLines(monthlyDataPoints);
         addBudgetLine(lines, 100);
 
         monthlyData = new LineChartData(lines);
@@ -145,6 +131,24 @@ public class StatisticFragment extends Fragment {
         chartView.setZoomEnabled(false);
     }
 
+    private List<Line> generateLines(float [] dataPoints) {
+        List<Line> lines = new ArrayList<Line>();
+        List<PointValue> values = new ArrayList<PointValue>();
+
+        for (int i = 0; i < numberOfPoints; i++){
+            values.add(new PointValue(i, dataPoints[i]));
+        }
+
+        Line line = new Line(values);
+        line.setColor(ChartUtils.COLOR_GREEN);
+        line.setShape(shape);
+        line.setHasLabels(hasLabels);
+        line.setHasLines(hasLines);
+        line.setHasPoints(hasPoints);
+        lines.add(line);
+        return lines;
+    }
+
     private void addBudgetLine(List<Line> lines, float budget) {
         List<PointValue> budgetValue = new ArrayList<PointValue>();
         budgetValue.add(new PointValue(0, budget));
@@ -154,6 +158,36 @@ public class StatisticFragment extends Fragment {
         budgetLine.setHasPoints(false);
         budgetLine.setColor(ChartUtils.COLOR_RED);
         lines.add(budgetLine);
+    }
+
+    private void getDailyLineData(LineChartView chartView){
+        List<Line> lines = generateLines(dailyDataPoints);
+        lines.get(0).setCubic(true);
+
+        dailyData = new LineChartData(lines);
+
+        // Set up the X Axis Labels
+        List<Float> axisValues = new ArrayList<Float>();
+        for (int i = 0; i < numberOfPoints; i++){
+            axisValues.add(Float.valueOf(i));
+        }
+
+        List<String> axisValueLabels = new ArrayList<String>();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM");
+        Calendar calendar = new GregorianCalendar();
+        for (int i = 0; i < 12; i++){
+            calendar.set(Calendar.MONTH, i);
+            axisValueLabels.add(sdf.format(calendar.getTime()));
+        }
+        Axis axisX = Axis.generateAxisFromCollection(axisValues, axisValueLabels);
+
+        Axis axisY = new Axis().setHasLines(true);
+        monthlyData.setAxisXBottom(axisX);
+        monthlyData.setAxisYLeft(axisY);
+
+        monthlyData.setBaseValue(Float.NEGATIVE_INFINITY);
+        chartView.setLineChartData(dailyData);
+        chartView.setZoomEnabled(false);
     }
 
 }
