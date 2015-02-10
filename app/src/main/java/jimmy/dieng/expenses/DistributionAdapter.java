@@ -14,11 +14,11 @@ import lecho.lib.hellocharts.model.SliceValue;
 /**
  * Created by jimmydieng on 15-02-07.
  */
-public class ExpenseAdapter extends ArrayAdapter {
+public class DistributionAdapter extends ArrayAdapter {
     private ArrayList<SliceValue> mExpenses;
     private Context mContext;
 
-    public ExpenseAdapter(Context context, int resource, ArrayList<SliceValue> objects) {
+    public DistributionAdapter(Context context, int resource, ArrayList<SliceValue> objects) {
         super(context, resource, objects);
         mContext = context;
         mExpenses = objects;
@@ -36,7 +36,7 @@ public class ExpenseAdapter extends ArrayAdapter {
 
         if (expenseView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            expenseView = inflater.inflate(R.layout.expense_list_item, parent, false);
+            expenseView = inflater.inflate(R.layout.distribution_list_item, parent, false);
 
             holderView = new ExpenseHolder();
             holderView.mTitle = (TextView) expenseView.findViewById(R.id.textview_expense_title);

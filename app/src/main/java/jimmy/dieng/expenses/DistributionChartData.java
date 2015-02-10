@@ -8,16 +8,16 @@ import lecho.lib.hellocharts.model.SliceValue;
 /**
  * Created by jimmydieng on 15-02-05.
  */
-public class ExpenseChartData extends PieChartData {
+public class DistributionChartData extends PieChartData {
 
-    public ExpenseChartData() {
+    public DistributionChartData() {
     }
 
-    public ExpenseChartData(List<SliceValue> values) {
+    public DistributionChartData(List<SliceValue> values) {
         super(values);
     }
 
-    public ExpenseChartData(PieChartData data) {
+    public DistributionChartData(PieChartData data) {
         super(data);
     }
 
