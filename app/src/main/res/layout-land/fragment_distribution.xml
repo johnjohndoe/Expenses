@@ -3,19 +3,19 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="@dimen/activity_horizontal_margin">
 
     <lecho.lib.hellocharts.view.PieChartView
         android:id="@+id/pie_distribution"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="7" />
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="5" />
 
     <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3">
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="5">
 
         <ListView
             android:id="@+id/distribution_list"
@@ -36,5 +36,6 @@
             fab:fab_colorNormal="@color/primary"
             fab:fab_colorPressed="@color/primary_pressed"
             fab:fab_colorRipple="@color/ripple" />
+
     </FrameLayout>
 </LinearLayout>

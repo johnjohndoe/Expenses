@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.melnykov.fab.FloatingActionButton;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -97,6 +99,10 @@ public class DistributionFragment extends Fragment {
             }
         });
         distributionList.setAdapter(distributionAdapter);
+
+        // Set up Floating Action Button
+        FloatingActionButton addExpenseButton = (FloatingActionButton) rootView.findViewById(R.id.fab_add_expense);
+        addExpenseButton.attachToListView(distributionList);
     }
 
     @Override
