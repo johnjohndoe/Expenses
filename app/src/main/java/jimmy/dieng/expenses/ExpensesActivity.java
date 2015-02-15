@@ -57,7 +57,7 @@ public class ExpensesActivity extends ActionBarActivity
             case 1:
                 fragmentLaunched = ExpenseFragment.newInstance();
                 break;
-            case 3:
+            case 4:
                 fragmentLaunched = DistributionFragment.newInstance();
                 break;
             case 5:

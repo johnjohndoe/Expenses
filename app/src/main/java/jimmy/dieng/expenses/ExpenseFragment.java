@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import lecho.lib.hellocharts.view.ColumnChartView;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,7 +15,6 @@ import lecho.lib.hellocharts.view.ColumnChartView;
  */
 public class ExpenseFragment extends Fragment {
     View rootView;
-    ColumnChartView expenseChart;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -48,7 +45,6 @@ public class ExpenseFragment extends Fragment {
     }
 
     private void setUpUI() {
-        expenseChart = (ColumnChartView) rootView.findViewById(R.id.expense_chart);
     }
 
 
